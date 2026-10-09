@@ -1,1 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Shines PawMarket | Everything for Pets</title>
+
+<meta name="description" content="Find pets, pet shops, boarding facilities, grooming services, veterinarians and animal products on Shines PawMarket.">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #087f5b;
+    --secondary: #e8f8f1;
+    --dark: #18352b;
+    --light: #ffffff;
+    --accent: #ffb703;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f6f9f7;
+    color: #24352d;
+    line-height: 1.6;
+}
+
+header {
+    background: var(--primary);
+    color: white;
+    padding: 18px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.logo span {
+    color: var(--accent);
+}
+
+nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+.hero {
+    background: linear-gradient(135deg, #d9f5e7, #fff8df);
+    padding: 55px 5%;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 36px;
+    color: var(--dark);
+    margin-bottom: 12px;
+}
+
+.hero p {
+    max-width: 650px;
+    margin: 0 auto 22px;
+}
+
+.search-box {
+    display: flex;
+    max-width: 650px;
+    margin: auto;
+    gap: 8px;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d5ded8;
+    border-radius: 7px;
+    font-size: 15px;
+}
+
+button, .button {
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 7px;
+    padding: 12px 18px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+}
+
+button:hover, .button:hover {
+    background: #056747;
+}
+
+section {
+    padding: 40px 5%;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.section-title h2 {
+    font-size: 27px;
+    color: var(--dark);
+}
+
+.section-title p {
+    color: #64746b;
+}
+
+.categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+    gap: 14px;
+}
+
+.category {
+    background: white;
+    padding: 22px 10px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 10px #00000008;
+    cursor: pointer;
+    border: 1px solid #e8eee9;
+}
+
+.category:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.category .icon {
+    font-size: 35px;
+}
+
+.category h3 {
+    font-size: 15px;
+    margin-top: 7px;
+}
+
+.featured {
+    background: var(--secondary);
+}
+
+.listings {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e1e9e3;
+    box-shadow: 0 3px 12px #00000008;
+}
+
+.card-content {
+    padding: 18px;
+}
+
+.card h3 {
+    margin-bottom: 7px;
+}
+
+.card p {
+    color: #637168;
+    font-size: 14px;
+    margin-bottom: 10px;
+    overflow-wrap: anywhere;
+}
+
+.card .price {
+    color: var(--primary);
+    font-weight: bold;
+    font-size: 19px;
+}
+
+.badge {
+    display: inline-block;
+    background: #fff1c2;
+    color: #775500;
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.placeholder {
+    background: #e7f5ed;
+    padding: 25px 10px;
+    text-align: center;
+    font-size: 52px;
+}
+
+.business-section {
+    background: white;
+}
+
+.promo {
+    background: #18352b;
+    color: white;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    margin-top: 25px;
+}
+
+.promo h2 {
+    margin-bottom: 10px;
+}
+
+.promo p {
+    margin-bottom: 15px;
+}
+
+.yellow-button {
+    background: var(--accent);
+    color: #18352b;
+    font-weight: bold;
+}
+
+form {
+    max-width: 650px;
+    margin: auto;
+    background: white;
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px #00000008;
+}
+
+form label {
+    display: block;
+    font-weight: bold;
+    margin: 14px 0 5px;
+}
+
+form button {
+    margin-top: 18px;
+    width: 100%;
+}
+
+.notice {
+    background: #fff4d6;
+    color: #684e00;
+    padding: 12px;
+    border-radius: 7px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+footer {
+    background: #18352b;
+    color: white;
+    padding: 30px 5%;
+    text-align: center;
+}
+
+footer a {
+    color: #b5f1d2;
+    text-decoration: none;
+}
+
+footer p {
+    margin: 8px 0;
+}
+
+@media (max-width: 600px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .hero h1 {
+        font-size: 28px;
+    }
+
+    .search-box {
+        flex-direction: column;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">🐾 Shines <span>PawMarket</span></div>
+
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#categories">Categories</a>
+        <a href="#services">Pet Services</a>
+        <a href="#businesses">Businesses</a>
+        <a href="#submit">Submit a Post</a>
+    </nav>
+</header>
+
+<section class="hero" id="home">
+    <h1>Everything for Pets, All in One Place!</h1>
+
+    <p>
+        Buy and sell pets, find trusted boarding facilities,
+        discover grooming shops, contact veterinarians
+        and explore pet products.
+    </p>
+
+    <div class="search-box">
+        <input id="searchInput"
+               type="search"
+               placeholder="Search pets, vets, grooming...">
+
+        <button onclick="searchListings()">Search</button>
+    </div>
+</section>
+
+<section id="categories">
+    <div class="section-title">
+        <h2>Explore Categories</h2>
+        <p>Find what you need for your animal friends.</p>
+    </div>
+
+    <div class="categories">
+
+        <div class="category" onclick="chooseCategory('Pets for Sale')">
+            <div class="icon">🐕</div>
+            <h3>Pets for Sale</h3>
+        </div>
+
+        <div class="category" onclick="chooseCategory('Pet Boarding')">
+            <div class="icon">🏠</div>
+            <h3>Pet Boarding</h3>
+        </div>
+
+        <div class="category" onclick="chooseCategory('Pet Grooming')">
+            <div class="icon">✂️</div>
+            <h3>Pet Grooming</h3>
+        </div>
+
+        <div class="category" onclick="chooseCategory('Veterinary Clinic')">
+            <div class="icon">🩺</div>
+            <h3>Veterinary Clinics</h3>
+        </div>
+
+        <div class="category" onclick="chooseCategory('Pet Products')">
+            <div class="icon">🛍️</div>
+            <h3>Pet Products</h3>
+        </div>
+
+        <div class="category" onclick="chooseCategory('Pet Adoption')">
+            <div class="icon">🐾</div>
+            <h3>Pet Adoption</h3>
+        </div>
+
+        <div class="category" onclick="chooseCategory('Lost and Found')">
+            <div class="icon">🔎</div>
+            <h3>Lost & Found</h3>
+        </div>
+
+        <div class="category" onclick="chooseCategory('Animal Services')">
+            <div class="icon">🐄</div>
+            <h3>Other Animals</h3>
+        </div>
+
+    </div>
+</section>
+
+<section class="featured" id="listings">
+    <div class="section-title">
+        <h2>Featured Listings</h2>
+        <p>Approved listings and sponsored promotions will appear here.</p>
+    </div>
+
+    <div id="listingResults" class="listings">
+        <div class="card">
+            <div class="placeholder">🐕</div>
+            <div class="card-content">
+                <h3>Find Your Next Pet</h3>
+                <p>Browse available pets after approved listings are added.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="placeholder">🏠</div>
+            <div class="card-content">
+                <h3>Pet Boarding</h3>
+                <p>Find accommodation for your pets while you are away.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="placeholder">🩺</div>
+            <div class="card-content">
+                <h3>Veterinary Services</h3>
+                <p>Discover animal health professionals and clinics.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="services">
+    <div class="section-title">
+        <h2>Pet Services</h2>
+        <p>Connect with businesses that care for animals.</p>
+    </div>
+
+    <div class="listings">
+
+        <div class="card">
+            <div class="placeholder">🏠</div>
+            <div class="card-content">
+                <h3>Boarding & Daycare</h3>
+                <p>Find dog hotels, cat boarding and temporary pet care.</p>
+                <button onclick="chooseCategory('Pet Boarding')">
+                    Find Boarding
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="placeholder">✂️</div>
+            <div class="card-content">
+                <h3>Grooming Shops</h3>
+                <p>Discover bathing, brushing and professional grooming.</p>
+                <button onclick="chooseCategory('Pet Grooming')">
+                    Find Groomers
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="placeholder">🩺</div>
+            <div class="card-content">
+                <h3>Veterinary Clinics</h3>
+                <p>Find clinics, animal hospitals and veterinary services.</p>
+                <button onclick="chooseCategory('Veterinary Clinic')">
+                    Find Veterinarians
+                </button>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section class="business-section" id="businesses">
+    <div class="section-title">
+        <h2>Promote Your Pet Business</h2>
+        <p>
+            Help more customers discover your shop or animal service.
+        </p>
+    </div>
+
+    <div class="promo">
+        <h2>🚀 Put Your Business in the Spotlight!</h2>
+
+        <p>
+            Apply to promote your veterinary clinic, grooming shop,
+            boarding facility or pet store.
+        </p>
+
+        <p>
+            Approved businesses will be able to apply for paid
+            featured placements when the promotion system launches.
+        </p>
+
+        <a class="button yellow-button" href="#submit">
+            Submit Your Business
+        </a>
+    </div>
+</section>
+
+<section id="submit">
+    <div class="section-title">
+        <h2>Submit a Listing or Business</h2>
+        <p>Every submission must be reviewed before publication.</p>
+    </div>
+
+    <form id="listingForm">
+
+        <div class="notice">
+            IMPORTANT: This demonstration form does not yet send
+            submissions to the administrator. Do not enter private
+            information. We will connect a secure submission system next.
+        </div>
+
+        <label for="postType">What would you like to submit?</label>
+
+        <select id="postType" required>
+            <option value="">Select a category</option>
+            <option>Pets for Sale</option>
+            <option>Pet Adoption</option>
+            <option>Pet Boarding</option>
+            <option>Pet Grooming</option>
+            <option>Veterinary Clinic</option>
+            <option>Pet Products</option>
+            <option>Lost and Found</option>
+            <option>Animal Services</option>
+        </select>
+
+        <label for="title">Listing or Business Name</label>
+        <input id="title" type="text" required
+               placeholder="Enter the name">
+
+        <label for="location">Location</label>
+        <input id="location" type="text" required
+               placeholder="City, State, Country">
+
+        <label for="price">Price or Service Fee (optional)</label>
+        <input id="price" type="text"
+               placeholder="Enter price if applicable">
+
+        <label for="description">Description</label>
+        <textarea id="description" rows="4" required
+                  placeholder="Describe your pet, business or service"></textarea>
+
+        <label for="contact">Business or Seller Contact</label>
+        <input id="contact" type="text" required
+               placeholder="Business phone or contact details">
+
+        <label for="photo">Photo (optional)</label>
+        <input id="photo" type="file"
+               accept="image/jpeg,image/png,image/webp">
+
+        <button type="submit">Submit for Approval</button>
+
+    </form>
+</section>
+
+<footer>
+    <h2>🐾 Shines PawMarket</h2>
+
+    <p>Everything for Pets, All in One Place!</p>
+
+    <p>Connecting pet lovers with animal businesses and services.</p>
+
+    <p>
+        Please verify sellers and businesses before making payments.
+    </p>
+
+    <p>
+        &copy; <span id="year"></span> Shines PawMarket.
+        All rights reserved.
+    </p>
+</footer>
+
+<script>
+document.getElementById("year").textContent =
+    new Date().getFullYear();
+
+function chooseCategory(category) {
+    document.getElementById("searchInput").value = category;
+
+    document.getElementById("listings").scrollIntoView({
+        behavior: "smooth"
+    });
+
+    searchListings();
+}
+
+function searchListings() {
+    const query = document.getElementById("searchInput")
+        .value.trim();
+
+    if (!query) {
+        alert("Please enter what you want to find.");
+        return;
+    }
+
+    alert(
+        "Search for: " + query +
+        "\n\nThe live listing search will work after " +
+        "we connect the website database."
+    );
+}
+
+document.getElementById("listingForm")
+    .addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        alert(
+            "The submission system is not connected yet. " +
+            "Your post has NOT been sent or saved. " +
+            "Please wait until the secure submission system is installed."
+        );
+    });
+</script>
+
+</body>
+</html>
