@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shines PawMarket | Admin</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background: #f4f4f9;
+    color: #222;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+}
+
+header {
+    background: #6a5acd;
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px #00000012;
+}
+
+input, button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+input {
+    border: 1px solid #ccc;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+    background: #6a5acd;
+    color: white;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.listing {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 8px;
+    overflow-wrap: anywhere;
+}
+
+.approve {
+    background: #16803c;
+}
+
+.reject {
+    background: #b42318;
+}
+
+#message {
+    overflow-wrap: anywhere;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<header>
+    <h1>🐾 Shines PawMarket</h1>
+    <p>Administrator Dashboard</p>
+</header>
+
+<section class="card" id="loginSection">
+    <h2>Admin Login</h2>
+    <p>Sign in using the email and password for your authorized Supabase account.</p>
+
+    <form id="loginForm">
+        <input id="email" type="email" placeholder="Admin email" required>
+        <input id="password" type="password" placeholder="Password" required>
+        <button type="submit">Sign In</button>
+    </form>
+</section>
+
+<section class="card" id="dashboard" hidden>
+    <h2>Pending Listings</h2>
+    <button id="refreshButton">Refresh Listings</button>
+    <button id="logoutButton">Sign Out</button>
+    <div id="listings"></div>
+</section>
+
+<section class="card">
+    <p id="message" role="status">Please sign in to continue.</p>
+</section>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://xrgsariftpguhduejaeo.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_B4DY7AtZzlYKliIgIWfCDg_L1sOjHjH";
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
+const loginSection = document.getElementById("loginSection");
+const dashboard = document.getElementById("dashboard");
+const message = document.getElementById("message");
+const listingsContainer = document.getElementById("listings");
+
+function showMessage(text) {
+    message.textContent = text;
+}
+
+async function loadListings() {
+    listingsContainer.replaceChildren();
+    showMessage("Checking administrator access...");
+
+    const { data: userResult, error: userError } =
+        await supabaseClient.auth.getUser();
+
+    if (userError || !userResult.user) {
+        dashboard.hidden = true;
+        loginSection.hidden = false;
+        showMessage("Please sign in.");
+        return;
+    }
+
+    const { data: adminRecord, error: adminError } =
+        await supabaseClient
+            .from("admin_users")
+            .select("user_id")
+            .eq("user_id", userResult.user.id)
+            .maybeSingle();
+
+    if (adminError || !adminRecord) {
+        dashboard.hidden = true;
+        loginSection.hidden = false;
+        showMessage("This account is not authorized as an administrator.");
+        return;
+    }
+
+    loginSection.hidden = true;
+    dashboard.hidden = false;
+
+    const { data, error } = await supabaseClient
+        .from("listings")
+        .select("id,title,category,description,location,contact,price,status,created_at")
+        .eq("status", "pending")
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        showMessage("Unable to load listings. Check your database policies.");
+        console.error(error);
+        return;
+    }
+
+    if (!data || data.length === 0) {
+        showMessage("No pending listings right now.");
+        return;
+    }
+
+    showMessage("Pending listings: " + data.length);
+
+    data.forEach(function(item) {
+        const card = document.createElement("article");
+        card.className = "listing";
+
+        const title = document.createElement("h3");
+        title.textContent = item.title;
+
+        const details = document.createElement("p");
+        details.textContent =
+            "Category: " + item.category +
+            " | Location: " + item.location;
+
+        const description = document.createElement("p");
+        description.textContent = item.description;
+
+        const contact = document.createElement("p");
+        contact.textContent = "Contact: " + item.contact;
+
+        const price = document.createElement("p");
+        price.textContent =
+            item.price == null ? "Price: Not provided" : "Price: " + item.price;
+
+        const approveButton = document.createElement("button");
+        approveButton.className = "approve";
+        approveButton.textContent = "Approve";
+
+        const rejectButton = document.createElement("button");
+        rejectButton.className = "reject";
+        rejectButton.textContent = "Reject";
+
+        approveButton.addEventListener("click", function() {
+            updateListing(item.id, "approved", approveButton, rejectButton);
+        });
+
+        rejectButton.addEventListener("click", function() {
+            updateListing(item.id, "rejected", approveButton, rejectButton);
+        });
+
+        card.append(title, details, description, contact, price,
+                    approveButton, rejectButton);
+
+        listingsContainer.appendChild(card);
+    });
+}
+
+async function updateListing(id, newStatus, approveButton, rejectButton) {
+    if (!confirm("Are you sure you want to " + newStatus + " this listing?")) {
+        return;
+    }
+
+    approveButton.disabled = true;
+    rejectButton.disabled = true;
+
+    const { error } = await supabaseClient
+        .from("listings")
+        .update({ status: newStatus })
+        .eq("id", id)
+        .eq("status", "pending");
+
+    if (error) {
+        console.error(error);
+        showMessage("Update failed. Check your administrator permissions.");
+        approveButton.disabled = false;
+        rejectButton.disabled = false;
+        return;
+    }
+
+    showMessage("Listing updated to " + newStatus + ".");
+    await loadListings();
+}
+
+document.getElementById("loginForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    showMessage("Signing in...");
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    const { error } = await supabaseClient.auth.signInWithPassword({
+        email: email,
+        password: password
+    });
+
+    document.getElementById("password").value = "";
+
+    if (error) {
+        showMessage("Sign-in failed. Check your email and password.");
+        return;
+    }
+
+    await loadListings();
+});
+
+document.getElementById("refreshButton").addEventListener("click", loadListings);
+
+document.getElementById("logoutButton").addEventListener("click", async function() {
+    await supabaseClient.auth.signOut();
+    dashboard.hidden = true;
+    loginSection.hidden = false;
+    listingsContainer.replaceChildren();
+    showMessage("You have signed out.");
+});
+
+loadListings();
+</script>
+
+</body>
+  </html>
