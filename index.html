@@ -635,6 +635,18 @@ document.getElementById("listingForm")
     z-index: 9999;
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<script>
+const SUPABASE_URL = "https://xrgsariftpguhduejaeo.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_B4DY7AtZzlYKliIgIWfCDg_L1sOjHjH";
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
+console.log("Shines PawMarket database connection is ready!");
+</script>
 </body>
 </html>
