@@ -635,18 +635,86 @@ document.getElementById("listingForm")
     z-index: 9999;
 }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-const SUPABASE_URL = "https://xrgsariftpguhduejaeo.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_B4DY7AtZzlYKliIgIWfCDg_L1sOjHjH";
-
-const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-);
-
-console.log("Shines PawMarket database connection is ready!");
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>  <script>  
+const SUPABASE_URL = "https://xrgsariftpguhduejaeo.supabase.co";  
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_B4DY7AtZzlYKliIgIWfCDg_L1sOjHjH";  
+  
+const supabaseClient = window.supabase.createClient(  
+    SUPABASE_URL,  
+    SUPABASE_PUBLISHABLE_KEY  
+);  
+  
+const listingForm = document.getElementById("listingForm");  
+  
+if (listingForm) {  
+    listingForm.addEventListener("submit", async function(event) {  
+        event.preventDefault();  
+  
+        const submitButton = listingForm.querySelector(  
+            'button[type="submit"]'  
+        );  
+  
+        submitButton.disabled = true;  
+        submitButton.textContent = "Submitting...";  
+  
+        try {  
+            const title = document.getElementById("title").value.trim();  
+            const category = document.getElementById("postType").value;  
+            const location = document.getElementById("location").value.trim();  
+            const description = document.getElementById("description").value.trim();  
+            const contact = document.getElementById("contact").value.trim();  
+            const priceText = document.getElementById("price").value.trim();  
+  
+            if (!title || !category || !location || !description || !contact) {  
+                throw new Error("Please complete all required fields.");  
+            }  
+  
+            let price = null;  
+  
+            if (priceText !== "") {  
+                price = Number(priceText.replace(/,/g, ""));  
+  
+                if (!Number.isFinite(price) || price < 0) {  
+                    throw new Error("Please enter a valid, non-negative price.");  
+                }  
+            }  
+  
+            const { error } = await supabaseClient  
+                .from("listings")  
+                .insert([{  
+                    title: title,  
+                    category: category,  
+                    location: location,  
+                    description: description,  
+                    contact: contact,  
+                    price: price,  
+                    status: "pending",  
+                    is_featured: false  
+                }]);  
+  
+            if (error) {  
+                throw error;  
+            }  
+  
+            alert(  
+                "Thank you! Your listing has been submitted for review. " +  
+                "It will not appear publicly until the administrator approves it."  
+            );  
+  
+            listingForm.reset();  
+  
+        } catch (error) {  
+            console.error("Listing submission failed:", error);  
+            alert(  
+                "We couldn't submit your listing. Please check your connection " +  
+                "and try again. If the problem continues, contact the website administrator."  
+            );  
+        } finally {  
+            submitButton.disabled = false;  
+            submitButton.textContent = "Submit for Approval";  
+        }  
+    });  
+}  
 </script>
 </body>
 </html>
