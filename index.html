@@ -569,152 +569,257 @@ footer p {
     </p>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-document.getElementById("year").textContent =
-    new Date().getFullYear();
+const SUPABASE_URL = "https://xrgsariftpguhduejaeo.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_B4DY7AtZzlYKliIgIWfCDg_L1sOjHjH";
 
-function chooseCategory(category) {
-    document.getElementById("searchInput").value = category;
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
 
+document.getElementById("year").textContent = new Date().getFullYear();
+
+const results = document.getElementById("listingResults");
+const searchInput = document.getElementById("searchInput");
+
+let approvedListings = [];
+
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, function(char) {
+        return {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        }[char];
+    });
+}
+
+function getIcon(category) {
+    const icons = {
+        "Pets for Sale": "🐕",
+        "Pet Adoption": "🐾",
+        "Pet Boarding": "🏠",
+        "Pet Grooming": "✂️",
+        "Veterinary Clinic": "🩺",
+        "Pet Products": "🛍️",
+        "Lost and Found": "🔎",
+        "Animal Services": "🐄"
+    };
+
+    return icons[category] || "🐾";
+}
+
+function renderListings(items) {
+    results.replaceChildren();
+
+    if (!items.length) {
+        const message = document.createElement("p");
+        message.textContent =
+            "No approved listings found. Please check back soon.";
+        results.appendChild(message);
+        return;
+    }
+
+    items.forEach(function(item) {
+        const card = document.createElement("article");
+        card.className = "card";
+
+        const icon = document.createElement("div");
+        icon.className = "placeholder";
+        icon.textContent = getIcon(item.category);
+        card.appendChild(icon);
+
+        const content = document.createElement("div");
+        content.className = "card-content";
+
+        const title = document.createElement("h3");
+        title.textContent = item.title;
+        content.appendChild(title);
+
+        if (item.is_featured) {
+            const badge = document.createElement("span");
+            badge.className = "badge";
+            badge.textContent = "FEATURED";
+            content.appendChild(badge);
+        }
+
+        const category = document.createElement("p");
+        category.textContent = "Category: " + item.category;
+        content.appendChild(category);
+
+        const location = document.createElement("p");
+        location.textContent = "Location: " + item.location;
+        content.appendChild(location);
+
+        const description = document.createElement("p");
+        description.textContent = item.description;
+        content.appendChild(description);
+
+        if (item.price !== null && item.price !== undefined) {
+            const price = document.createElement("p");
+            price.className = "price";
+            price.textContent = "₦" + Number(item.price).toLocaleString("en-NG");
+            content.appendChild(price);
+        }
+
+        const contact = document.createElement("p");
+        contact.textContent = "Contact: " + item.contact;
+        content.appendChild(contact);
+
+        const whatsappNumber = item.contact.replace(/\D/g, "");
+        const normalizedNumber = whatsappNumber.startsWith("0")
+            ? "234" + whatsappNumber.slice(1)
+            : whatsappNumber;
+
+        if (/^234\d{10}$/.test(normalizedNumber)) {
+            const whatsapp = document.createElement("a");
+            whatsapp.className = "button";
+            whatsapp.href = "https://wa.me/" + normalizedNumber;
+            whatsapp.target = "_blank";
+            whatsapp.rel = "noopener noreferrer";
+            whatsapp.textContent = "Contact on WhatsApp";
+            content.appendChild(whatsapp);
+        }
+
+        card.appendChild(content);
+        results.appendChild(card);
+    });
+}
+
+async function loadApprovedListings() {
+    results.replaceChildren();
+
+    const loading = document.createElement("p");
+    loading.textContent = "Loading approved listings...";
+    results.appendChild(loading);
+
+    const { data, error } = await supabaseClient
+        .from("listings")
+        .select("id,title,category,description,location,contact,price,is_featured,created_at")
+        .eq("status", "approved")
+        .order("is_featured", { ascending: false })
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error("Could not load listings:", error);
+        results.replaceChildren();
+
+        const message = document.createElement("p");
+        message.textContent =
+            "We couldn't load listings right now. Please try again later.";
+        results.appendChild(message);
+        return;
+    }
+
+    approvedListings = data || [];
+    applySearch();
+}
+
+function applySearch() {
+    const query = searchInput.value.trim().toLowerCase();
+
+    const filtered = approvedListings.filter(function(item) {
+        return [
+            item.title,
+            item.category,
+            item.location,
+            item.description
+        ].some(function(value) {
+            return String(value || "").toLowerCase().includes(query);
+        });
+    });
+
+    renderListings(filtered);
+}
+
+function searchListings() {
     document.getElementById("listings").scrollIntoView({
         behavior: "smooth"
     });
 
+    applySearch();
+}
+
+function chooseCategory(category) {
+    searchInput.value = category;
     searchListings();
 }
 
-function searchListings() {
-    const query = document.getElementById("searchInput")
-        .value.trim();
+searchInput.addEventListener("input", applySearch);
 
-    if (!query) {
-        alert("Please enter what you want to find.");
-        return;
-    }
+/* Submit new listings for admin approval */
+const listingForm = document.getElementById("listingForm");
 
-    alert(
-        "Search for: " + query +
-        "\n\nThe live listing search will work after " +
-        "we connect the website database."
-    );
-}
+listingForm.addEventListener("submit", async function(event) {
+    event.preventDefault();
 
-document.getElementById("listingForm")
-    .addEventListener("submit", function(event) {
-        event.preventDefault();
+    const button = listingForm.querySelector('button[type="submit"]');
+    button.disabled = true;
+    button.textContent = "Submitting...";
+
+    try {
+        const title = document.getElementById("title").value.trim();
+        const category = document.getElementById("postType").value;
+        const location = document.getElementById("location").value.trim();
+        const description = document.getElementById("description").value.trim();
+        const contact = document.getElementById("contact").value.trim();
+        const priceText = document.getElementById("price").value.trim();
+
+        if (!title || !category || !location || !description || !contact) {
+            throw new Error("Please complete all required fields.");
+        }
+
+        let price = null;
+
+        if (priceText !== "") {
+            price = Number(priceText.replace(/,/g, ""));
+
+            if (!Number.isFinite(price) || price < 0) {
+                throw new Error("Please enter a valid price.");
+            }
+        }
+
+        const { error } = await supabaseClient
+            .from("listings")
+            .insert([{
+                title,
+                category,
+                location,
+                description,
+                contact,
+                price,
+                status: "pending",
+                is_featured: false
+            }]);
+
+        if (error) throw error;
 
         alert(
-            "The submission system is not connected yet. " +
-            "Your post has NOT been sent or saved. " +
-            "Please wait until the secure submission system is installed."
+            "Thank you! Your listing has been submitted for review. " +
+            "It will appear publicly only after the administrator approves it."
         );
-    });
-</script>
-<!-- WhatsApp Admin Contact Button -->
-<a href="https://wa.me/2347081222972?text=Hello%20Shines%20PawMarket%20Admin"
-   class="whatsapp-button"
-   target="_blank"
-   rel="noopener noreferrer">
-   💬 Chat with Admin on WhatsApp
-</a>
 
-<style>
-.whatsapp-button {
-    position: fixed;
-    bottom: 20px;
-    right: 15px;
-    background: #25D366;
-    color: white;
-    padding: 14px 18px;
-    border-radius: 30px;
-    text-decoration: none;
-    font-family: Arial, sans-serif;
-    font-weight: bold;
-    font-size: 14px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    z-index: 9999;
-}
-</style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>  <script>  
-const SUPABASE_URL = "https://xrgsariftpguhduejaeo.supabase.co";  
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_B4DY7AtZzlYKliIgIWfCDg_L1sOjHjH";  
-  
-const supabaseClient = window.supabase.createClient(  
-    SUPABASE_URL,  
-    SUPABASE_PUBLISHABLE_KEY  
-);  
-  
-const listingForm = document.getElementById("listingForm");  
-  
-if (listingForm) {  
-    listingForm.addEventListener("submit", async function(event) {  
-        event.preventDefault();  
-  
-        const submitButton = listingForm.querySelector(  
-            'button[type="submit"]'  
-        );  
-  
-        submitButton.disabled = true;  
-        submitButton.textContent = "Submitting...";  
-  
-        try {  
-            const title = document.getElementById("title").value.trim();  
-            const category = document.getElementById("postType").value;  
-            const location = document.getElementById("location").value.trim();  
-            const description = document.getElementById("description").value.trim();  
-            const contact = document.getElementById("contact").value.trim();  
-            const priceText = document.getElementById("price").value.trim();  
-  
-            if (!title || !category || !location || !description || !contact) {  
-                throw new Error("Please complete all required fields.");  
-            }  
-  
-            let price = null;  
-  
-            if (priceText !== "") {  
-                price = Number(priceText.replace(/,/g, ""));  
-  
-                if (!Number.isFinite(price) || price < 0) {  
-                    throw new Error("Please enter a valid, non-negative price.");  
-                }  
-            }  
-  
-            const { error } = await supabaseClient  
-                .from("listings")  
-                .insert([{  
-                    title: title,  
-                    category: category,  
-                    location: location,  
-                    description: description,  
-                    contact: contact,  
-                    price: price,  
-                    status: "pending",  
-                    is_featured: false  
-                }]);  
-  
-            if (error) {  
-                throw error;  
-            }  
-  
-            alert(  
-                "Thank you! Your listing has been submitted for review. " +  
-                "It will not appear publicly until the administrator approves it."  
-            );  
-  
-            listingForm.reset();  
-  
-        } catch (error) {  
-            console.error("Listing submission failed:", error);  
-            alert(  
-                "We couldn't submit your listing. Please check your connection " +  
-                "and try again. If the problem continues, contact the website administrator."  
-            );  
-        } finally {  
-            submitButton.disabled = false;  
-            submitButton.textContent = "Submit for Approval";  
-        }  
-    });  
-}  
+        listingForm.reset();
+
+    } catch (error) {
+        console.error("Submission failed:", error);
+        alert(
+            error.message ||
+            "We couldn't submit your listing. Please try again."
+        );
+    } finally {
+        button.disabled = false;
+        button.textContent = "Submit for Approval";
+    }
+});
+
+loadApprovedListings();
 </script>
+
 </body>
 </html>
