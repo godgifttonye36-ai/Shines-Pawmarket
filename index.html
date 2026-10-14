@@ -821,18 +821,23 @@ if (photoFile) {
             }
         }
 
-        const { error } = await supabaseClient
-            .from("listings")
-            .insert([{
-                title,
-                category,
-                location,
-                description,
-                contact,
-                price,
-                status: "pending",
-                is_featured: false
-            }]);
+        const { error: insertError } = await supabaseClient
+    .from("listings")
+    .insert([{
+        title,
+        category,
+        location,
+        description,
+        contact,
+        price,
+        image_url: imageUrl,
+        status: "pending",
+        is_featured: false
+    }]);
+
+if (insertError) {
+    throw new Error("Listing submission failed: " + insertError.message);
+    }
 
         if (error) throw error;
 
