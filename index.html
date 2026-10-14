@@ -754,7 +754,7 @@ searchInput.addEventListener("input", applySearch);
 
 /* Submit new listings for admin approval */
 const listingForm = document.getElementById("listingForm");
-
+const photoInput = document.getElementById("photo");
 listingForm.addEventListener("submit", async function(event) {
     event.preventDefault();
 
@@ -768,6 +768,7 @@ listingForm.addEventListener("submit", async function(event) {
         const location = document.getElementById("location").value.trim();
         const description = document.getElementById("description").value.trim();
         const contact = document.getElementById("contact").value.trim();
+        const photoFile = photoInput.files[0];
         const priceText = document.getElementById("price").value.trim();
 
         if (!title || !category || !location || !description || !contact) {
