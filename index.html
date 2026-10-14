@@ -770,7 +770,43 @@ listingForm.addEventListener("submit", async function(event) {
         const contact = document.getElementById("contact").value.trim();
         const photoFile = photoInput.files[0];
         const priceText = document.getElementById("price").value.trim();
+let imageUrl = null;
 
+if (photoFile) {
+    if (!["image/jpeg", "image/png", "image/webp"].includes(photoFile.type)) {
+        throw new Error("Please upload a JPG, PNG, or WebP image.");
+    }
+
+    if (photoFile.size > 5 * 1024 * 1024) {
+        throw new Error("Your photo must be smaller than 5 MB.");
+    }
+
+    const extension = {
+        "image/jpeg": "jpg",
+        "image/png": "png",
+        "image/webp": "webp"
+    }[photoFile.type];
+
+    const filePath = "pending/" + crypto.randomUUID() + "." + extension;
+
+    const { data: uploadData, error: uploadError } =
+        await supabaseClient.storage
+            .from("listing-photos")
+            .upload(filePath, photoFile, {
+                contentType: photoFile.type,
+                upsert: false
+            });
+
+    if (uploadError) {
+        throw new Error("Photo upload failed: " + uploadError.message);
+    }
+
+    const { data: urlData } = supabaseClient.storage
+        .from("listing-photos")
+        .getPublicUrl(uploadData.path);
+
+    imageUrl = urlData.publicUrl;
+    }
         if (!title || !category || !location || !description || !contact) {
             throw new Error("Please complete all required fields.");
         }
