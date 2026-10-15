@@ -791,7 +791,7 @@ if (photoFile) {
 
     const { data: uploadData, error: uploadError } =
         await supabaseClient.storage
-            .from("listing-photos")
+            .from("listing photos")
             .upload(filePath, photoFile, {
                 contentType: photoFile.type,
                 upsert: false
@@ -802,7 +802,7 @@ if (photoFile) {
     }
 
     const { data: urlData } = supabaseClient.storage
-        .from("listing-photos")
+        .from("listing photos")
         .getPublicUrl(uploadData.path);
 
     imageUrl = urlData.publicUrl;
