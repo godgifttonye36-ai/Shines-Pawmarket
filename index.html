@@ -618,7 +618,8 @@ function createPlaceholder(category) {
     icon.className = "placeholder";
     icon.textContent = getIcon(category);
     return icon;
-    }
+}
+
 function renderListings(items) {
     results.replaceChildren();
 
@@ -635,29 +636,29 @@ function renderListings(items) {
         card.className = "card";
 
         if (item.image_url) {
-    const photo = document.createElement("img");
-    photo.src = item.image_url;
-    photo.alt = item.title || "Pet photo";
-    photo.style.width = "100%";
-    photo.style.height = "200px";
-    photo.style.objectFit = "cover";
-    photo.style.borderRadius = "12px 12px 0 0";
-    photo.loading = "lazy";
+            const photo = document.createElement("img");
+            photo.src = item.image_url;
+            photo.alt = item.title || "Pet photo";
+            photo.style.width = "100%";
+            photo.style.height = "200px";
+            photo.style.objectFit = "cover";
+            photo.style.borderRadius = "12px 12px 0 0";
+            photo.loading = "lazy";
 
-    photo.onerror = function() {
-        photo.replaceWith(createPlaceholder(item.category));
-    };
+            photo.onerror = function() {
+                photo.replaceWith(createPlaceholder(item.category));
+            };
 
-    card.appendChild(photo);
-} else {
-    card.appendChild(createPlaceholder(item.category));
-    }
+            card.appendChild(photo);
+        } else {
+            card.appendChild(createPlaceholder(item.category));
+        }
 
         const content = document.createElement("div");
         content.className = "card-content";
 
         const title = document.createElement("h3");
-        title.textContent = item.title;
+        title.textContent = item.title || "Untitled listing";
         content.appendChild(title);
 
         if (item.is_featured) {
@@ -668,48 +669,59 @@ function renderListings(items) {
         }
 
         const category = document.createElement("p");
-        category.textContent = "Category: " + item.category;
+        category.textContent = "Category: " + (item.category || "Other");
         content.appendChild(category);
 
         const location = document.createElement("p");
-        location.textContent = "Location: " + item.location;
+        location.textContent = "Location: " + (item.location || "Not provided");
         content.appendChild(location);
 
         const description = document.createElement("p");
-        description.textContent = item.description;
+        description.textContent = item.description || "";
         content.appendChild(description);
 
-        if (item.price !== null && item.price !== undefined) {
+        if (item.price !== null && item.price !== undefined && item.price !== "") {
             const price = document.createElement("p");
-            price.className = "price";
-            price.textContent = "₦" + Number(item.price).toLocaleString("en-NG");
+            const amount = Number(item.price);
+
+            price.textContent = Number.isFinite(amount)
+                ? "Price: ₦" + amount.toLocaleString("en-NG")
+                : "Price: " + item.price;
+
             content.appendChild(price);
         }
 
-        const contact = document.createElement("p");
-        contact.textContent = "Contact: " + item.contact;
-        content.appendChild(contact);
+        if (item.contact) {
+            const contact = document.createElement("p");
+            contact.textContent = "Contact: " + item.contact;
+            content.appendChild(contact);
 
-        const whatsappNumber = item.contact.replace(/\D/g, "");
-        const normalizedNumber = whatsappNumber.startsWith("0")
-            ? "234" + whatsappNumber.slice(1)
-            : whatsappNumber;
+            const digits = String(item.contact).replace(/\D/g, "");
+            let phone = digits;
 
-        if (/^234\d{10}$/.test(normalizedNumber)) {
-            const whatsapp = document.createElement("a");
-            whatsapp.className = "button";
-            whatsapp.href = "https://wa.me/" + normalizedNumber;
-            whatsapp.target = "_blank";
-            whatsapp.rel = "noopener noreferrer";
-            whatsapp.textContent = "Contact on WhatsApp";
-            content.appendChild(whatsapp);
+            if (phone.startsWith("0") && phone.length === 11) {
+                phone = "234" + phone.substring(1);
+            } else if (phone.startsWith("234") && phone.length === 13) {
+                // Already in Nigerian international format.
+            } else {
+                phone = "";
+            }
+
+            if (phone) {
+                const whatsapp = document.createElement("a");
+                whatsapp.href = "https://wa.me/" + phone;
+                whatsapp.target = "_blank";
+                whatsapp.rel = "noopener noreferrer";
+                whatsapp.className = "button";
+                whatsapp.textContent = "Contact on WhatsApp";
+                content.appendChild(whatsapp);
+            }
         }
 
         card.appendChild(content);
         results.appendChild(card);
     });
-}
-
+    }
 async function loadApprovedListings() {
     results.replaceChildren();
 
