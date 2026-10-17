@@ -721,7 +721,8 @@ function renderListings(items) {
         card.appendChild(content);
         results.appendChild(card);
     });
-    }
+}
+
 async function loadApprovedListings() {
     results.replaceChildren();
 
@@ -731,7 +732,7 @@ async function loadApprovedListings() {
 
     const { data, error } = await supabaseClient
         .from("listings")
-        .select("id,title,category,description,location,contact,price,is_featured,created_at")
+        .select("id,title,category,description,location,contact,price,image_url,is_featured,created_at")
         .eq("status", "approved")
         .order("is_featured", { ascending: false })
         .order("created_at", { ascending: false });
