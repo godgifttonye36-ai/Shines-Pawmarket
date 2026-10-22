@@ -838,6 +838,14 @@
       }
 
       if (!data || !data.id) {
+  showMessage(
+    "We could not confirm that your request was saved. " +
+    "Please check the database before submitting again.",
+    "error"
+  );
+
+  return;
+  }
         showMessage(
           "We could not confirm that your request was saved. " +
           "Please check the database before submitting again.",
