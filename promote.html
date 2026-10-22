@@ -422,13 +422,16 @@ document.getElementById("promotion-form").addEventListener("submit", async funct
       .insert(request);
 
     if (error) {
-      console.error("Promotion request error:", error);
-      showMessage(
-        "We couldn't save your request. Please try again later or contact support.",
-        false
-      );
-      return;
-    }
+console.error("Promotion request error:", error);
+
+showMessage(
+"Error: " + error.message +
+(error.code ? " (Code: " + error.code + ")" : ""),
+false
+);
+
+return;
+  }
 
     this.reset();
     document.getElementById("existing-fields").hidden = true;
