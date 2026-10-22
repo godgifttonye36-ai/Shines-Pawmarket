@@ -272,6 +272,196 @@
       "The form design is ready, but online submission has not been connected yet. " +
       "Please wait for the administrator to finish setup before using this form to request or pay for a promotion.";
   });
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://xrgsariftpguhduejaeo.supabase.co";
+const SUPABASE_KEY = "sb_publishable_B4DY7AtZzlYKliIgIWfCDg_L1sOjHjH";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+document.getElementById("year").textContent = new Date().getFullYear();
+
+const packagePrices = {
+  Basic: 3000,
+  Premium: 5000,
+  VIP: 10000
+};
+
+function choosePackage(name) {
+  document.getElementById("package").value = name;
+
+  document.querySelectorAll(".package").forEach(card => {
+    card.classList.remove("selected");
+  });
+
+  document.getElementById(
+    "card-" + name.toLowerCase()
+  ).classList.add("selected");
+
+  document.getElementById("package").scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+}
+
+document.getElementById("package").addEventListener("change", function () {
+  document.querySelectorAll(".package").forEach(card => {
+    card.classList.remove("selected");
+  });
+
+  if (this.value) {
+    document.getElementById(
+      "card-" + this.value.toLowerCase()
+    ).classList.add("selected");
+  }
+});
+
+document.getElementById("listing-type").addEventListener("change", function () {
+  const existing = this.value === "existing";
+  const isNew = this.value === "new";
+
+  document.getElementById("existing-fields").hidden = !existing;
+  document.getElementById("new-fields").hidden = !isNew;
+
+  document.getElementById("listing-id").required = existing;
+  document.getElementById("new-title").required = isNew;
+  document.getElementById("new-category").required = isNew;
+  document.getElementById("new-description").required = isNew;
+  document.getElementById("new-location").required = isNew;
+});
+
+document.getElementById("promotion-form").addEventListener("submit", async function (event) {
+  event.preventDefault();
+
+  const message = document.getElementById("message");
+  const submitButton = this.querySelector(".submit-btn");
+
+  function showMessage(text, success) {
+    message.style.display = "block";
+    message.style.background = success ? "#e8f7ec" : "#fff0f0";
+    message.textContent = text;
+  }
+
+  const packageName = document.getElementById("package").value;
+  const listingType = document.getElementById("listing-type").value;
+  const businessName = document.getElementById("business").value.trim();
+  const contact = document.getElementById("contact").value.trim();
+  const paymentReference = document.getElementById("reference").value.trim();
+
+  if (!packagePrices[packageName]) {
+    showMessage("Please choose a valid promotion package.", false);
+    return;
+  }
+
+  if (!businessName || !contact || !listingType) {
+    showMessage("Please complete all required fields.", false);
+    return;
+  }
+
+  const request = {
+    business_name: businessName,
+    contact: contact,
+    package_name: packageName,
+    amount_ngn: packagePrices[packageName],
+    payment_reference: paymentReference || null,
+    listing_type: listingType,
+    payment_status: "pending",
+    promotion_status: "pending"
+  };
+
+  if (listingType === "existing") {
+    const listingId = document.getElementById("listing-id").value.trim();
+
+    const uuidPattern =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+    if (!uuidPattern.test(listingId)) {
+      showMessage("Please enter a valid listing ID.", false);
+      return;
+    }
+
+    request.listing_id = listingId;
+  }
+
+  if (listingType === "new") {
+    request.new_listing_title =
+      document.getElementById("new-title").value.trim();
+
+    request.new_listing_category =
+      document.getElementById("new-category").value.trim();
+
+    request.new_listing_description =
+      document.getElementById("new-description").value.trim();
+
+    request.new_listing_location =
+      document.getElementById("new-location").value.trim();
+
+    const priceInput = document.getElementById("new-price").value;
+
+    if (priceInput !== "") {
+      const price = Number(priceInput);
+
+      if (!Number.isFinite(price) || price < 0) {
+        showMessage("Please enter a valid listing price.", false);
+        return;
+      }
+
+      request.new_listing_price = price;
+    }
+  }
+
+  submitButton.disabled = true;
+  submitButton.textContent = "Submitting...";
+
+  try {
+    const { error } = await supabaseClient
+      .from("promotion_requests")
+      .insert(request);
+
+    if (error) {
+      console.error("Promotion request error:", error);
+      showMessage(
+        "We couldn't save your request. Please try again later or contact support.",
+        false
+      );
+      return;
+    }
+
+    this.reset();
+    document.getElementById("existing-fields").hidden = true;
+    document.getElementById("new-fields").hidden = true;
+
+    document.getElementById("listing-id").required = false;
+
+    [
+      "new-title",
+      "new-category",
+      "new-description",
+      "new-location"
+    ].forEach(id => {
+      document.getElementById(id).required = false;
+    });
+
+    document.querySelectorAll(".package").forEach(card => {
+      card.classList.remove("selected");
+    });
+
+    showMessage(
+      "Your promotion request has been received! Payment and promotion activation are still pending admin review. Please wait for official payment instructions before transferring money.",
+      true
+    );
+
+  } catch (error) {
+    console.error(error);
+    showMessage("A connection error occurred. Please try again later.", false);
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = "Submit Promotion Request";
+  }
+});
 </script>
 
 </body>
