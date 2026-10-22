@@ -820,11 +820,9 @@
     try {
       const client = getSupabaseClient();
 
-      const { data, error } = await client
-        .from("promotion_requests")
-        .insert(request)
-        .select("id")
-        .single();
+      const { error } = await client
+  .from("promotion_requests")
+  .insert(request);
 
       if (error) {
         console.error("Promotion request error:", error);
