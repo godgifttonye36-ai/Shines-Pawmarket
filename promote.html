@@ -825,40 +825,29 @@
   .insert(request);
 
       if (error) {
-        console.error("Promotion request error:", error);
+  console.error("Promotion request error:", error);
 
-        showMessage(
-          "Your request could not be saved. " +
-          "Supabase says: " + error.message +
-          (error.code ? " (Code: " + error.code + ")" : ""),
-          "error"
-        );
+  showMessage(
+    "Your request could not be saved. " +
+    "Supabase says: " + error.message +
+    (error.code ? " (Code: " + error.code + ")" : ""),
+    "error"
+  );
 
-        return;
-      }
+  return;
+}
 
-  
-        showMessage(
-          "We could not confirm that your request was saved. " +
-          "Please check the database before submitting again.",
-          "error"
-        );
+form.reset();
 
-        return;
-      }
+updateListingFields();
+updatePackageSelection();
 
-      form.reset();
-
-      updateListingFields();
-      updatePackageSelection();
-
-      showMessage(
-        "Success! Your promotion request was received. " +
-        "Your reference ID is " + data.id +
-        ". Your request is still pending admin review. " +
-        "Do not transfer money until you receive official payment instructions.",
-        "success"
-      );
+showMessage(
+  "Success! Your promotion request was received. " +
+  "Your request is pending admin review. " +
+  "Do not transfer money until you receive official payment instructions.",
+  "success"
+);
 
     } catch (error) {
       console.error("Promotion form error:", error);
