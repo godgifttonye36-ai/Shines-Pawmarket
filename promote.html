@@ -3,230 +3,603 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Promote Your Listing | Shines PawMarket</title>
-  <meta name="description" content="Promote your pets and pet businesses on Shines PawMarket with affordable featured listing packages.">
+
+  <meta
+    name="description"
+    content="Promote your pet business or listing on Shines PawMarket with Basic, Premium, and VIP promotion packages."
+  >
+
   <style>
-    * { box-sizing: border-box; }
+    :root {
+      --green: #16794b;
+      --dark-green: #105b37;
+      --light-green: #eaf7ef;
+      --background: #f5f8f5;
+      --text: #202b24;
+      --muted: #66736b;
+      --border: #dce5de;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f7f3;
-      color: #202820;
+      background: var(--background);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.6;
     }
+
     header {
-      background: #164e35;
-      color: white;
+      background: var(--white);
+      padding: 18px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav {
+      max-width: 1050px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-size: 21px;
+      font-weight: 800;
+      color: var(--green);
+      text-decoration: none;
+    }
+
+    .nav a:last-child {
+      color: var(--green);
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .hero {
       text-align: center;
-      padding: 24px 15px;
+      padding: 40px 16px 24px;
     }
-    header h1 { margin: 0 0 8px; }
-    header p { margin: 0; }
-    nav { margin-top: 15px; }
-    nav a { color: white; margin: 0 10px; }
-    main {
-      width: 92%;
-      max-width: 1000px;
-      margin: 28px auto;
+
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: clamp(28px, 5vw, 42px);
+      line-height: 1.2;
     }
-    .intro, .form-card {
-      background: white;
-      padding: 22px;
-      border-radius: 14px;
-      margin-bottom: 24px;
-      box-shadow: 0 3px 12px #0000000d;
+
+    .hero p {
+      max-width: 620px;
+      margin: 0 auto;
+      color: var(--muted);
     }
+
+    .container {
+      max-width: 1050px;
+      margin: auto;
+      padding: 0 16px 45px;
+    }
+
     .packages {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 16px;
-      margin: 22px 0;
+      margin: 25px 0 35px;
     }
+
     .package {
-      background: white;
-      padding: 22px;
-      border: 2px solid #dce7dc;
-      border-radius: 14px;
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 23px 18px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    .package h3 { color: #164e35; }
+
+    .package.selected {
+      border-color: var(--green);
+      background: var(--light-green);
+    }
+
+    .package h2 {
+      margin: 0 0 8px;
+      font-size: 23px;
+    }
+
     .price {
-      font-size: 27px;
-      font-weight: bold;
-      margin: 12px 0;
+      font-size: 28px;
+      font-weight: 800;
+      margin: 8px 0;
+      color: var(--green);
     }
-    .package button, .submit-btn {
-      background: #176b45;
-      color: white;
-      border: 0;
-      border-radius: 8px;
-      padding: 13px 17px;
+
+    .duration {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .package ul {
+      padding-left: 20px;
+      text-align: left;
+      font-size: 14px;
+      margin: 18px 0;
+    }
+
+    button {
+      font: inherit;
       cursor: pointer;
+    }
+
+    .package button,
+    .submit-btn {
+      background: var(--green);
+      color: var(--white);
+      border: 0;
+      border-radius: 9px;
+      padding: 12px 18px;
       font-weight: bold;
     }
-    .package button { width: 100%; }
-    .package button:hover, .submit-btn:hover { background: #10472e; }
+
+    .package button {
+      width: 100%;
+      margin-top: auto;
+    }
+
+    .package button:hover,
+    .submit-btn:hover {
+      background: var(--dark-green);
+    }
+
+    .form-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 25px;
+      max-width: 760px;
+      margin: auto;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04);
+    }
+
+    .form-card h2 {
+      margin-top: 0;
+    }
+
+    .intro {
+      color: var(--muted);
+      margin-bottom: 22px;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
     label {
       display: block;
       font-weight: bold;
-      margin: 16px 0 7px;
+      margin-bottom: 7px;
     }
-    input, select, textarea {
+
+    input,
+    select,
+    textarea {
+      display: block;
       width: 100%;
       padding: 12px;
-      border: 1px solid #cbd5cb;
+      border: 1px solid #cbd6cd;
       border-radius: 8px;
+      background: var(--white);
+      color: var(--text);
       font: inherit;
-      background: white;
     }
-    textarea { min-height: 90px; resize: vertical; }
-    .notice {
-      background: #fff6dc;
-      border-left: 4px solid #e1ad32;
-      padding: 14px;
-      border-radius: 6px;
-      line-height: 1.6;
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: 2px solid #b8e5c9;
+      border-color: var(--green);
     }
-    .selected {
-      border-color: #176b45;
-      background: #f0faf3;
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
     }
-    #message {
-      margin-top: 18px;
-      padding: 12px;
-      border-radius: 8px;
+
+    .section-heading {
+      margin: 26px 0 14px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      font-size: 19px;
+    }
+
+    .note {
+      background: #fff8e8;
+      border: 1px solid #f0dfae;
+      border-radius: 9px;
+      padding: 13px;
+      margin: 20px 0;
+      font-size: 14px;
+    }
+
+    .status-message {
       display: none;
+      padding: 15px;
+      margin-bottom: 18px;
+      border-radius: 9px;
       overflow-wrap: anywhere;
     }
-    footer {
-      background: #164e35;
-      color: white;
-      padding: 22px;
-      text-align: center;
+
+    .status-message.success {
+      display: block;
+      background: #e8f7ec;
+      color: #155d31;
+      border: 1px solid #b8e3c4;
     }
-    footer a { color: white; }
+
+    .status-message.error {
+      display: block;
+      background: #fff0f0;
+      color: #8b2020;
+      border: 1px solid #f0c4c4;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 15px;
+      font-size: 16px;
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.65;
+      cursor: wait;
+    }
+
+    .small-text {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 12px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px 16px;
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    @media (max-width: 720px) {
+      .packages {
+        grid-template-columns: 1fr;
+      }
+
+      .package {
+        padding: 22px;
+      }
+
+      .form-card {
+        padding: 19px;
+      }
+    }
   </style>
 </head>
+
 <body>
 
 <header>
-  <h1>🐾 Shines PawMarket</h1>
-  <p>Give your listing more visibility!</p>
-  <nav>
-    <a href="./index.html">Home</a>
-    <a href="./">Browse Listings</a>
+  <nav class="nav">
+    <a class="brand"
+       href="index.html">
+      🐾 Shines PawMarket
+    </a>
+
+    <a href="index.html">← Back to Home</a>
   </nav>
 </header>
 
-<main>
-  <section class="intro">
-    <h2>Promote Your Pet or Business ⭐</h2>
-    <p>Choose a promotion package to help your listing stand out on Shines PawMarket.</p>
-    <p>You can promote an existing listing or submit a new listing for review.</p>
-    <div class="notice">
-      <strong>Important:</strong> Submitting this form does not activate a promotion.
-      Your payment must be verified by the Shines PawMarket administrator first.
-      Promotions last 30 days after activation.
-    </div>
-  </section>
+<section class="hero">
+  <h1>Promote Your Listing 🚀</h1>
 
-  <section>
-    <h2>Choose Your Package</h2>
-    <div class="packages">
-      <article class="package" id="card-basic">
-        <h3>🐾 Basic</h3>
-        <div class="price">₦3,000</div>
-        <p>30 days of promotion.</p>
-        <p>A budget-friendly way to promote your listing.</p>
-        <button type="button" onclick="choosePackage('Basic', 3000)">Choose Basic</button>
-      </article>
+  <p>
+    Give your pet business more visibility on Shines PawMarket.
+    Choose a package and submit your promotion request.
+  </p>
+</section>
 
-      <article class="package" id="card-premium">
-        <h3>⭐ Premium</h3>
-        <div class="price">₦5,000</div>
-        <p>30 days of promotion.</p>
-        <p>For businesses seeking extra visibility.</p>
-        <button type="button" onclick="choosePackage('Premium', 5000)">Choose Premium</button>
-      </article>
+<main class="container">
 
-      <article class="package" id="card-vip">
-        <h3>👑 VIP</h3>
-        <div class="price">₦10,000</div>
-        <p>30 days of promotion.</p>
-        <p>Our highest-priced promotion package.</p>
-        <button type="button" onclick="choosePackage('VIP', 10000)">Choose VIP</button>
-      </article>
-    </div>
+  <section class="packages" aria-label="Promotion packages">
+
+    <article class="package" id="card-basic">
+      <h2>Basic</h2>
+      <div class="price">₦3,000</div>
+      <div class="duration">30 days</div>
+
+      <ul>
+        <li>Promotion request for one listing</li>
+        <li>Standard promotional placement</li>
+        <li>Admin review before activation</li>
+      </ul>
+
+      <button type="button" data-package="Basic">
+        Choose Basic
+      </button>
+    </article>
+
+    <article class="package" id="card-premium">
+      <h2>Premium</h2>
+      <div class="price">₦5,000</div>
+      <div class="duration">30 days</div>
+
+      <ul>
+        <li>Promotion request for one listing</li>
+        <li>Enhanced promotional placement</li>
+        <li>Admin review before activation</li>
+      </ul>
+
+      <button type="button" data-package="Premium">
+        Choose Premium
+      </button>
+    </article>
+
+    <article class="package" id="card-vip">
+      <h2>VIP</h2>
+      <div class="price">₦10,000</div>
+      <div class="duration">30 days</div>
+
+      <ul>
+        <li>Promotion request for one listing</li>
+        <li>Priority promotional placement</li>
+        <li>Admin review before activation</li>
+      </ul>
+
+      <button type="button" data-package="VIP">
+        Choose VIP
+      </button>
+    </article>
+
   </section>
 
   <section class="form-card">
-    <h2>Promotion Request Form</h2>
+
+    <h2>Submit Your Promotion Request</h2>
+
+    <p class="intro">
+      Complete the form below. Your request will remain pending
+      until it has been reviewed by the administrator.
+    </p>
+
+    <div
+      id="message"
+      class="status-message"
+      role="status"
+      aria-live="polite"
+    ></div>
 
     <form id="promotion-form">
-      <label for="package">Selected package</label>
-      <select id="package" required>
-        <option value="">Choose a package</option>
-        <option value="Basic">Basic — ₦3,000</option>
-        <option value="Premium">Premium — ₦5,000</option>
-        <option value="VIP">VIP — ₦10,000</option>
-      </select>
 
-      <label for="business">Business or seller name</label>
-      <input id="business" maxlength="120" required placeholder="Enter your name or business name">
+      <div class="field">
+        <label for="package">Promotion package *</label>
 
-      <label for="contact">Phone or WhatsApp number</label>
-      <input id="contact" maxlength="40" required placeholder="Enter your contact number">
+        <select id="package" name="package" required>
+          <option value="">Choose a package</option>
+          <option value="Basic">Basic — ₦3,000</option>
+          <option value="Premium">Premium — ₦5,000</option>
+          <option value="VIP">VIP — ₦10,000</option>
+        </select>
+      </div>
 
-      <label for="listing-type">What would you like to promote?</label>
-      <select id="listing-type" required>
-        <option value="">Select an option</option>
-        <option value="existing">An existing listing</option>
-        <option value="new">A new listing</option>
-      </select>
+      <div class="field">
+        <label for="business">Business or seller name *</label>
+
+        <input
+          id="business"
+          name="business"
+          type="text"
+          maxlength="150"
+          required
+          placeholder="Enter your business name"
+        >
+      </div>
+
+      <div class="field">
+        <label for="contact">WhatsApp or phone number *</label>
+
+        <input
+          id="contact"
+          name="contact"
+          type="tel"
+          maxlength="40"
+          required
+          placeholder="Enter your contact number"
+        >
+      </div>
+
+      <div class="field">
+        <label for="listing-type">What do you want to promote? *</label>
+
+        <select id="listing-type" name="listing-type" required>
+          <option value="">Choose an option</option>
+          <option value="existing">An existing listing</option>
+          <option value="new">A new listing</option>
+        </select>
+      </div>
 
       <div id="existing-fields" hidden>
-        <label for="listing-id">Existing listing ID (UUID)</label>
-        <input id="listing-id" placeholder="Paste your listing ID">
-        <small>We will use this ID to identify the listing you want to promote.</small>
+
+        <h3 class="section-heading">Existing Listing</h3>
+
+        <div class="field">
+          <label for="listing-id">Listing ID *</label>
+
+          <input
+            id="listing-id"
+            name="listing-id"
+            type="text"
+            placeholder="Paste the listing UUID"
+          >
+
+          <p class="small-text">
+            Enter the listing's UUID from your database.
+          </p>
+        </div>
+
       </div>
 
       <div id="new-fields" hidden>
-        <label for="new-title">Pet or business listing title</label>
-        <input id="new-title" maxlength="150" placeholder="Example: Healthy Labrador puppies">
 
-        <label for="new-category">Category</label>
-        <input id="new-category" maxlength="80" placeholder="Example: Dogs">
+        <h3 class="section-heading">New Listing Details</h3>
 
-        <label for="new-description">Description</label>
-        <textarea id="new-description" maxlength="3000" placeholder="Describe the pet or business"></textarea>
+        <div class="field">
+          <label for="new-title">Listing title *</label>
 
-        <label for="new-location">Location</label>
-        <input id="new-location" maxlength="150" placeholder="City or area">
+          <input
+            id="new-title"
+            name="new-title"
+            type="text"
+            maxlength="200"
+            placeholder="Example: Healthy Labrador Puppies"
+          >
+        </div>
 
-        <label for="new-price">Price in naira (optional)</label>
-        <input id="new-price" type="number" min="0" step="0.01" placeholder="Enter price">
+        <div class="field">
+          <label for="new-category">Category *</label>
+
+          <select id="new-category" name="new-category">
+            <option value="">Choose a category</option>
+            <option value="Dogs">Dogs</option>
+            <option value="Cats">Cats</option>
+            <option value="Birds">Birds</option>
+            <option value="Fish">Fish</option>
+            <option value="Other Pets">Other Pets</option>
+            <option value="Pet Supplies">Pet Supplies</option>
+            <option value="Pet Services">Pet Services</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="new-description">Description *</label>
+
+          <textarea
+            id="new-description"
+            name="new-description"
+            maxlength="5000"
+            placeholder="Describe your pet, product, or service"
+          ></textarea>
+        </div>
+
+        <div class="field">
+          <label for="new-location">Location *</label>
+
+          <input
+            id="new-location"
+            name="new-location"
+            type="text"
+            maxlength="200"
+            placeholder="Town or city"
+          >
+        </div>
+
+        <div class="field">
+          <label for="new-price">Price in naira (optional)</label>
+
+          <input
+            id="new-price"
+            name="new-price"
+            type="number"
+            min="0"
+            step="0.01"
+            placeholder="Enter price"
+          >
+        </div>
+
       </div>
 
-      <label for="reference">Payment reference (optional until payment is made)</label>
-      <input id="reference" maxlength="120" placeholder="Enter your bank transfer reference">
+      <div class="field">
+        <label for="reference">
+          Payment reference (optional)
+        </label>
 
-      <p class="notice">
-        Bank transfer details will be provided by the administrator.
-        Do not send money to an unverified account. Never share your banking PIN
-        or password. A payment reference or receipt alone does not confirm payment.
+        <input
+          id="reference"
+          name="reference"
+          type="text"
+          maxlength="150"
+          placeholder="Leave blank if you have not paid"
+        >
+      </div>
+
+      <div class="note">
+        <strong>Important:</strong>
+        Submitting this form does not activate your promotion.
+        Wait for official payment instructions and confirmation
+        from the administrator before transferring money.
+      </div>
+
+      <button
+        class="submit-btn"
+        id="submit-button"
+        type="submit"
+      >
+        Submit Promotion Request
+      </button>
+
+      <p class="small-text">
+        Your request will be submitted for administrator review.
+        Do not submit bank passwords, PINs, or one-time passwords.
       </p>
 
-      <button class="submit-btn" type="submit">Submit Promotion Request</button>
-      <div id="message" role="status" aria-live="polite"></div>
     </form>
+
   </section>
+
 </main>
 
 <footer>
-  <p>© <span id="year"></span> Shines PawMarket. All rights reserved.</p>
-  <p>Questions? Contact our support team through the contact details on our website.</p>
+  © <span id="year"></span> Shines PawMarket.
+  All rights reserved.
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-  document.getElementById("year").textContent = new Date().getFullYear();
+(() => {
+  "use strict";
+
+  const SUPABASE_URL =
+    "https://xrgsariftpguhduejaeo.supabase.co";
+
+  const SUPABASE_KEY =
+    "sb_publishable_B4DY7AtZzlYKliIgIWfCDg_L1sOjHjH";
+
+  const form = document.getElementById("promotion-form");
+  const message = document.getElementById("message");
+  const submitButton = document.getElementById("submit-button");
+  const packageSelect = document.getElementById("package");
+  const listingType = document.getElementById("listing-type");
+
+  const existingFields = document.getElementById("existing-fields");
+  const newFields = document.getElementById("new-fields");
+
+  const listingIdInput = document.getElementById("listing-id");
+  const newTitleInput = document.getElementById("new-title");
+  const newCategoryInput = document.getElementById("new-category");
+  const newDescriptionInput = document.getElementById("new-description");
+  const newLocationInput = document.getElementById("new-location");
+  const newPriceInput = document.getElementById("new-price");
 
   const packagePrices = {
     Basic: 3000,
@@ -234,237 +607,282 @@
     VIP: 10000
   };
 
-  function choosePackage(name, price) {
-    document.getElementById("package").value = name;
-    document.querySelectorAll(".package").forEach(card => card.classList.remove("selected"));
-    document.getElementById("card-" + name.toLowerCase()).classList.add("selected");
-    document.getElementById("package").scrollIntoView({ behavior: "smooth", block: "center" });
-  }
+  let supabaseClient = null;
+  let submitting = false;
 
-  document.getElementById("package").addEventListener("change", function () {
-    document.querySelectorAll(".package").forEach(card => card.classList.remove("selected"));
-    if (this.value) {
-      document.getElementById("card-" + this.value.toLowerCase()).classList.add("selected");
-    }
-  });
+  document.getElementById("year").textContent =
+    new Date().getFullYear();
 
-  document.getElementById("listing-type").addEventListener("change", function () {
-    const existing = this.value === "existing";
-    const isNew = this.value === "new";
-
-    document.getElementById("existing-fields").hidden = !existing;
-    document.getElementById("new-fields").hidden = !isNew;
-
-    document.getElementById("listing-id").required = existing;
-    document.getElementById("new-title").required = isNew;
-    document.getElementById("new-category").required = isNew;
-    document.getElementById("new-description").required = isNew;
-    document.getElementById("new-location").required = isNew;
-  });
-
-  document.getElementById("promotion-form").addEventListener("submit", function (event) {
-    event.preventDefault();
-
-    const message = document.getElementById("message");
-    message.style.display = "block";
-    message.style.background = "#fff6dc";
-    message.textContent =
-      "The form design is ready, but online submission has not been connected yet. " +
-      "Please wait for the administrator to finish setup before using this form to request or pay for a promotion.";
-  });
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const SUPABASE_URL = "https://xrgsariftpguhduejaeo.supabase.co";
-const SUPABASE_KEY = "sb_publishable_B4DY7AtZzlYKliIgIWfCDg_L1sOjHjH";
-
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
-
-document.getElementById("year").textContent = new Date().getFullYear();
-
-const packagePrices = {
-  Basic: 3000,
-  Premium: 5000,
-  VIP: 10000
-};
-
-function choosePackage(name) {
-  document.getElementById("package").value = name;
-
-  document.querySelectorAll(".package").forEach(card => {
-    card.classList.remove("selected");
-  });
-
-  document.getElementById(
-    "card-" + name.toLowerCase()
-  ).classList.add("selected");
-
-  document.getElementById("package").scrollIntoView({
-    behavior: "smooth",
-    block: "center"
-  });
-}
-
-document.getElementById("package").addEventListener("change", function () {
-  document.querySelectorAll(".package").forEach(card => {
-    card.classList.remove("selected");
-  });
-
-  if (this.value) {
-    document.getElementById(
-      "card-" + this.value.toLowerCase()
-    ).classList.add("selected");
-  }
-});
-
-document.getElementById("listing-type").addEventListener("change", function () {
-  const existing = this.value === "existing";
-  const isNew = this.value === "new";
-
-  document.getElementById("existing-fields").hidden = !existing;
-  document.getElementById("new-fields").hidden = !isNew;
-
-  document.getElementById("listing-id").required = existing;
-  document.getElementById("new-title").required = isNew;
-  document.getElementById("new-category").required = isNew;
-  document.getElementById("new-description").required = isNew;
-  document.getElementById("new-location").required = isNew;
-});
-
-document.getElementById("promotion-form").addEventListener("submit", async function (event) {
-  event.preventDefault();
-
-  const message = document.getElementById("message");
-  const submitButton = this.querySelector(".submit-btn");
-
-  function showMessage(text, success) {
-    message.style.display = "block";
-    message.style.background = success ? "#e8f7ec" : "#fff0f0";
+  function showMessage(text, type) {
     message.textContent = text;
-  }
-
-  const packageName = document.getElementById("package").value;
-  const listingType = document.getElementById("listing-type").value;
-  const businessName = document.getElementById("business").value.trim();
-  const contact = document.getElementById("contact").value.trim();
-  const paymentReference = document.getElementById("reference").value.trim();
-
-  if (!packagePrices[packageName]) {
-    showMessage("Please choose a valid promotion package.", false);
-    return;
-  }
-
-  if (!businessName || !contact || !listingType) {
-    showMessage("Please complete all required fields.", false);
-    return;
-  }
-
-  const request = {
-    business_name: businessName,
-    contact: contact,
-    package_name: packageName,
-    amount_ngn: packagePrices[packageName],
-    payment_reference: paymentReference || null,
-    listing_type: listingType,
-    payment_status: "pending",
-    promotion_status: "pending"
-  };
-
-  if (listingType === "existing") {
-    const listingId = document.getElementById("listing-id").value.trim();
-
-    const uuidPattern =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
-    if (!uuidPattern.test(listingId)) {
-      showMessage("Please enter a valid listing ID.", false);
-      return;
-    }
-
-    request.listing_id = listingId;
-  }
-
-  if (listingType === "new") {
-    request.new_listing_title =
-      document.getElementById("new-title").value.trim();
-
-    request.new_listing_category =
-      document.getElementById("new-category").value.trim();
-
-    request.new_listing_description =
-      document.getElementById("new-description").value.trim();
-
-    request.new_listing_location =
-      document.getElementById("new-location").value.trim();
-
-    const priceInput = document.getElementById("new-price").value;
-
-    if (priceInput !== "") {
-      const price = Number(priceInput);
-
-      if (!Number.isFinite(price) || price < 0) {
-        showMessage("Please enter a valid listing price.", false);
-        return;
-      }
-
-      request.new_listing_price = price;
-    }
-  }
-
-  submitButton.disabled = true;
-  submitButton.textContent = "Submitting...";
-
-  try {
-    const { error } = await supabaseClient
-      .from("promotion_requests")
-      .insert(request);
-
-    if (error) {
-console.error("Promotion request error:", error);
-
-showMessage(
-"Error: " + error.message +
-(error.code ? " (Code: " + error.code + ")" : ""),
-false
-);
-
-return;
-  }
-
-    this.reset();
-    document.getElementById("existing-fields").hidden = true;
-    document.getElementById("new-fields").hidden = true;
-
-    document.getElementById("listing-id").required = false;
-
-    [
-      "new-title",
-      "new-category",
-      "new-description",
-      "new-location"
-    ].forEach(id => {
-      document.getElementById(id).required = false;
+    message.className = "status-message " + type;
+    message.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
     });
+  }
 
+  function clearMessage() {
+    message.textContent = "";
+    message.className = "status-message";
+  }
+
+  function updatePackageSelection() {
     document.querySelectorAll(".package").forEach(card => {
       card.classList.remove("selected");
     });
 
-    showMessage(
-      "Your promotion request has been received! Payment and promotion activation are still pending admin review. Please wait for official payment instructions before transferring money.",
-      true
+    if (packageSelect.value) {
+      const selectedCard = document.getElementById(
+        "card-" + packageSelect.value.toLowerCase()
+      );
+
+      if (selectedCard) {
+        selectedCard.classList.add("selected");
+      }
+    }
+  }
+
+  document.querySelectorAll("[data-package]").forEach(button => {
+    button.addEventListener("click", () => {
+      packageSelect.value = button.dataset.package;
+      updatePackageSelection();
+
+      packageSelect.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    });
+  });
+
+  packageSelect.addEventListener("change", updatePackageSelection);
+
+  function updateListingFields() {
+    const type = listingType.value;
+    const isExisting = type === "existing";
+    const isNew = type === "new";
+
+    existingFields.hidden = !isExisting;
+    newFields.hidden = !isNew;
+
+    listingIdInput.required = isExisting;
+
+    newTitleInput.required = isNew;
+    newCategoryInput.required = isNew;
+    newDescriptionInput.required = isNew;
+    newLocationInput.required = isNew;
+  }
+
+  listingType.addEventListener("change", updateListingFields);
+
+  function getSupabaseClient() {
+    if (supabaseClient) {
+      return supabaseClient;
+    }
+
+    if (
+      !window.supabase ||
+      typeof window.supabase.createClient !== "function"
+    ) {
+      throw new Error(
+        "The Supabase library did not load. Check your internet connection and refresh the page."
+      );
+    }
+
+    supabaseClient = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
     );
 
-  } catch (error) {
-    console.error(error);
-    showMessage("A connection error occurred. Please try again later.", false);
-  } finally {
-    submitButton.disabled = false;
-    submitButton.textContent = "Submit Promotion Request";
+    return supabaseClient;
   }
-});
+
+  form.addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    if (submitting) {
+      return;
+    }
+
+    clearMessage();
+
+    if (!form.reportValidity()) {
+      return;
+    }
+
+    const packageName = packageSelect.value;
+    const type = listingType.value;
+
+    if (!Object.prototype.hasOwnProperty.call(
+      packagePrices,
+      packageName
+    )) {
+      showMessage("Please choose a valid promotion package.", "error");
+      return;
+    }
+
+    const request = {
+      business_name:
+        document.getElementById("business").value.trim(),
+
+      contact:
+        document.getElementById("contact").value.trim(),
+
+      package_name: packageName,
+
+      amount_ngn: packagePrices[packageName],
+
+      listing_type: type,
+
+      payment_reference:
+        document.getElementById("reference").value.trim() || null,
+
+      payment_status: "pending",
+
+      promotion_status: "pending"
+    };
+
+    if (!request.business_name || !request.contact) {
+      showMessage(
+        "Please enter your business name and contact number.",
+        "error"
+      );
+      return;
+    }
+
+    if (type === "existing") {
+      const listingId = listingIdInput.value.trim();
+
+      const uuidPattern =
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+      if (!uuidPattern.test(listingId)) {
+        showMessage(
+          "Please enter a valid listing UUID.",
+          "error"
+        );
+        return;
+      }
+
+      request.listing_id = listingId;
+
+    } else if (type === "new") {
+      request.new_listing_title = newTitleInput.value.trim();
+
+      request.new_listing_category = newCategoryInput.value;
+
+      request.new_listing_description =
+        newDescriptionInput.value.trim();
+
+      request.new_listing_location =
+        newLocationInput.value.trim();
+
+      if (
+        !request.new_listing_title ||
+        !request.new_listing_category ||
+        !request.new_listing_description ||
+        !request.new_listing_location
+      ) {
+        showMessage(
+          "Please complete all required new listing fields.",
+          "error"
+        );
+        return;
+      }
+
+      const priceText = newPriceInput.value.trim();
+
+      if (priceText !== "") {
+        const price = Number(priceText);
+
+        if (!Number.isFinite(price) || price < 0) {
+          showMessage(
+            "Please enter a valid price.",
+            "error"
+          );
+          return;
+        }
+
+        request.new_listing_price = price;
+      }
+    } else {
+      showMessage(
+        "Please select an existing listing or a new listing.",
+        "error"
+      );
+      return;
+    }
+
+    submitting = true;
+    submitButton.disabled = true;
+    submitButton.textContent = "Submitting request...";
+
+    try {
+      const client = getSupabaseClient();
+
+      const { data, error } = await client
+        .from("promotion_requests")
+        .insert(request)
+        .select("id")
+        .single();
+
+      if (error) {
+        console.error("Promotion request error:", error);
+
+        showMessage(
+          "Your request could not be saved. " +
+          "Supabase says: " + error.message +
+          (error.code ? " (Code: " + error.code + ")" : ""),
+          "error"
+        );
+
+        return;
+      }
+
+      if (!data || !data.id) {
+        showMessage(
+          "We could not confirm that your request was saved. " +
+          "Please check the database before submitting again.",
+          "error"
+        );
+
+        return;
+      }
+
+      form.reset();
+
+      updateListingFields();
+      updatePackageSelection();
+
+      showMessage(
+        "Success! Your promotion request was received. " +
+        "Your reference ID is " + data.id +
+        ". Your request is still pending admin review. " +
+        "Do not transfer money until you receive official payment instructions.",
+        "success"
+      );
+
+    } catch (error) {
+      console.error("Promotion form error:", error);
+
+      showMessage(
+        error && error.message
+          ? error.message
+          : "An unexpected error occurred. Please refresh the page and try again.",
+        "error"
+      );
+
+    } finally {
+      submitting = false;
+      submitButton.disabled = false;
+      submitButton.textContent = "Submit Promotion Request";
+    }
+  });
+
+  updateListingFields();
+  updatePackageSelection();
+
+})();
 </script>
 
 </body>
